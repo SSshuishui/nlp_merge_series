@@ -38,7 +38,7 @@ def apply_vector(vector, pretrained_checkpoint):#, scaling_coef=1.0):
     return pretrained_model
     
 
-def our_merge(task_vectors):
+def hydra_merge(task_vectors):
     sum_param = {}
     n2p = []
     for m in range(len(task_vectors)):
