@@ -1,15 +1,15 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
-
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import time
 import sys
 import tqdm
-sys.path.append('/home/taskarithmetic/')
+sys.path.append(os.path.abspath('../../'))
 
 import torch
 from task_vectors import TaskVector
 from eval import eval_single_dataset, eval_single_dataset_head, eval_single_dataset_preprocess_head
 from args import parse_arguments
+
 def create_log_dir(path, filename='log.txt'):
     import logging
     if not os.path.exists(path):
@@ -27,17 +27,19 @@ def create_log_dir(path, filename='log.txt'):
 exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIST', 'DTD'] # SUN397 | Cars | RESISC45 | EuroSAT | SVHN | GTSRB | MNIST | DTD
 model = 'ViT-B-32'
 args = parse_arguments()
-args.data_location = '/home/taskarithmetic/data'
+
+args.home = '/data/model_merge/task_vectors/' # type your home path here
+args.data_location = args.home + 'train_data'
 args.model = model
-args.save = '/home/taskarithmetic/checkpoints/' + model
-args.logs_path = '/home/taskarithmetic/logs/' + model
-pretrained_checkpoint = '/home/taskarithmetic/checkpoints/'+model+'/zeroshot.pt'
+args.home + model
+args.logs_path = '../logs/' + model
+pretrained_checkpoint = args.home + model + '/zeroshot.pt'
 
 str_time_ = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
 log = create_log_dir(args.logs_path, 'log_{}_Layer_wise_AdaMerging.txt'.format(str_time_))
 args.log = log
 
-task_vectors = [TaskVector(pretrained_checkpoint, '/home/taskarithmetic/checkpoints/'+model+'/'+dataset_name+'/finetuned.pt') for dataset_name in exam_datasets]
+task_vectors = [TaskVector(pretrained_checkpoint, args.home + model+'/'+dataset_name+'/finetuned.pt') for dataset_name in exam_datasets]
 
 def del_attr(obj, names):
     if len(names) == 1:

@@ -6,11 +6,11 @@ import torch
 import numpy as np
 
 import utils
-from datasets.common import get_dataloader, maybe_dictionarize
+from vision_datasets.common import get_dataloader, maybe_dictionarize
 from heads import get_classification_head
 from modeling import ImageClassifier
 
-from datasets.registry import get_dataset
+from vision_datasets.registry import get_dataset
 
 def eval_single_dataset(image_encoder, dataset_name, args):
     classification_head = get_classification_head(args, dataset_name)

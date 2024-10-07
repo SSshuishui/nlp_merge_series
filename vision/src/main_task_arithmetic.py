@@ -1,12 +1,9 @@
 import os
-
 import numpy as np
-
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
 import time
 import sys
-sys.path.append('/home/zhaoxiang/llm_merge/our_Merging/')
+sys.path.append(os.path.abspath('../../'))
 
 from task_vectors import TaskVector
 from eval import eval_single_dataset
@@ -29,18 +26,19 @@ def create_log_dir(path, filename='log.txt'):
 exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIST', 'DTD'] # SUN397 | Cars | RESISC45 | EuroSAT | SVHN | GTSRB | MNIST | DTD
 model = 'ViT-B-32'
 args = parse_arguments()
-source_root_path = '/data/model_merge/task_vectors/'
-args.data_location = '/data/model_merge/task_vectors/train_data'
+
+args.home = '/data/model_merge/task_vectors/'
+args.data_location = args.home + 'train_data'
 args.model = model
-args.save = source_root_path + model
+args.save = args.home + model
 args.logs_path = '../logs/' + model
-pretrained_checkpoint = source_root_path+model+'/zeroshot.pt'
+pretrained_checkpoint = args.home+model+'/zeroshot.pt'
 
 str_time_ = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
 log = create_log_dir(args.logs_path, 'log_{}_task_arithmetic.txt'.format(str_time_))
 
 task_vectors = [
-    TaskVector(pretrained_checkpoint, source_root_path+model+'/'+dataset_name+'/finetuned.pt') for dataset_name in exam_datasets
+    TaskVector(pretrained_checkpoint, args.home+model+'/'+dataset_name+'/finetuned.pt') for dataset_name in exam_datasets
 ]
 
 task_vector_sum = sum(task_vectors)

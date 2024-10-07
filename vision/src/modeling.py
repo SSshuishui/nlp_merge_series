@@ -1,7 +1,5 @@
 import torch
-
 import open_clip
-
 import utils
 
 

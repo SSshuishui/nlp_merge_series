@@ -21,28 +21,37 @@ Refer to dataset processing in the [task_vectors](https://github.com/mlfoundatio
 ## Eval
 #### Run Task Arithmetic [paper](https://arxiv.org/abs/2212.04089)
 ```
-python main_task_arithmetic.py
+bash run.sh task_arithmetic
 ```
 
 #### Run TIES-MERGING [paper](https://arxiv.org/abs/2306.01708)
 ```
-python main_ties_merging.py
+bash run.sh ties
 ```
 
 #### Run AdaMerging [paper](https://arxiv.org/abs/2310.02575) Check [here](https://github.com/EnnengYang/AdaMerging) if you want to load the trained merge coefficients for AdaMerging.
 ```
 Task-wise
-python main_task_wise_adamerging.py
-python main_task_wise_adamergingpp.py
+bash run.sh ada_task_wise
+
+bash run.sh ada_task_wise_pp
 ```
 
 ```
 Layer-wise
-python main_layer_wise_adamerging.py
-python main_layer_wise_adamergingpp.py
+bash run.sh ada_layer_wise
+
+bash run.sh ada_layer_wise_pp
 ```
 
 #### Run EMR-Merging [paper](https://arxiv.org/pdf/2405.17461)
 ```
-python main_layer_wise_adamergingpp.py
+bash run.sh emr
+```
+
+#### Run Localize-and-Stitch Merging [paper](https://arxiv.org/pdf/2408.13656)
+```
+bash run.sh localize_stitch
+
+bash run.sh dataless_localize_stitch
 ```

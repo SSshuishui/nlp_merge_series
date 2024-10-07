@@ -1,19 +1,13 @@
 import os
 import torch
-
 import numpy as np
 from pathlib import Path
-
 import sys
 import os
 sys.path.append(os.path.abspath('../../'))
 from localize_utils import *
 
 import time
-import sys
-root = '/data/model_merge/task_vectors'
-sys.path.append(root)
-
 from eval import eval_single_dataset
 from args import parse_arguments
 import pickle
@@ -33,9 +27,9 @@ def create_log_dir(path, filename='log.txt'):
     return logger
 
 exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIST', 'DTD'] 
-
 model = 'ViT-B-16' 
 args = parse_arguments()
+
 args.home = '/data/model_merge/task_vectors/' # type your home path here
 args.data_location = args.home + 'train_data'
 args.model = model

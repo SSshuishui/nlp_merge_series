@@ -1,6 +1,5 @@
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-
 import time
 import sys
 import tqdm
@@ -28,19 +27,20 @@ def create_log_dir(path, filename='log.txt'):
 exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIST', 'DTD'] # SUN397 | Cars | RESISC45 | EuroSAT | SVHN | GTSRB | MNIST | DTD
 # exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'GTSRB', 'MNIST', 'DTD'] # SUN397 | Cars | RESISC45 | EuroSAT | SVHN | GTSRB | MNIST | DTD
 model = 'ViT-B-32'
-source_root_path = '/data/model_merge/task_vectors/'
 args = parse_arguments()
-args.data_location = source_root_path+'data'   # 数据
+
+args.home = '/data/model_merge/task_vectors/'
+args.data_location = args.home + 'train_data'
 args.model = model
-args.save = source_root_path+model
+args.save = args.home + model
 args.logs_path = '../logs/' + model
-pretrained_checkpoint = source_root_path+model+'/zeroshot.pt'
+pretrained_checkpoint = args.home+model+'/zeroshot.pt'
 
 str_time_ = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
 log = create_log_dir(args.logs_path, 'log_{}_Task_wise_AdaMerging.txt'.format(str_time_))
 args.log = log
 
-task_vectors = [TaskVector(pretrained_checkpoint, source_root_path+model+'/'+dataset_name+'/finetuned.pt') for dataset_name in exam_datasets]
+task_vectors = [TaskVector(pretrained_checkpoint, args.home+model+'/'+dataset_name+'/finetuned.pt') for dataset_name in exam_datasets]
 
 def del_attr(obj, names):
     if len(names) == 1:

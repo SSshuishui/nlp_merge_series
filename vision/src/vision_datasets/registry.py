@@ -5,15 +5,18 @@ import torch
 import copy
 
 from torch.utils.data.dataset import random_split
+from torch.utils.data import Dataset, DataLoader, Subset
+from collections import defaultdict, Counter
+import numpy as np
 
-from datasets.cars import Cars
-from datasets.dtd import DTD
-from datasets.eurosat import EuroSAT, EuroSATVal
-from datasets.gtsrb import GTSRB
-from datasets.mnist import MNIST
-from datasets.resisc45 import RESISC45
-from datasets.svhn import SVHN
-from datasets.sun397 import SUN397
+from vision_datasets.cars import Cars
+from vision_datasets.dtd import DTD
+from vision_datasets.eurosat import EuroSAT, EuroSATVal
+from vision_datasets.gtsrb import GTSRB
+from vision_datasets.mnist import MNIST
+from vision_datasets.resisc45 import RESISC45
+from vision_datasets.svhn import SVHN
+from vision_datasets.sun397 import SUN397
 
 registry = {
     name: obj for name, obj in inspect.getmembers(sys.modules[__name__], inspect.isclass)
@@ -27,6 +30,46 @@ class GenericDataset(object):
         self.test_dataset = None
         self.test_loader = None
         self.classnames = None
+
+
+def create_k_shot_dataset(dataset, num_shots=64, data_cap=1024):
+
+    dataset = dataset.train_dataset
+    targets = dataset.targets if hasattr(dataset, 'targets') else dataset.labels
+    
+    # Prepare to collect indices for each class
+    class_indices = defaultdict(list)
+    
+    # Optimization: Use a counter to keep track of counts per class
+    class_counts = Counter()
+    # class_counts = {}
+
+    # Collect indices
+    for idx, label in enumerate(targets):
+        label = label.item() if isinstance(label, torch.Tensor) else label
+        if class_counts[label] < num_shots:
+            class_indices[label].append(idx)
+            class_counts[label] += 1
+            # Break early if all classes have enough samples
+            # print(class_counts.values())
+            # if all(count >= num_shots for count in class_counts.values()):
+            #     break
+
+    # Collect exactly num_shots indices for each class
+    selected_indices = []
+    for label, indices in class_indices.items():
+        if len(indices) > num_shots:
+            selected_indices.extend(np.random.choice(indices, num_shots, replace=False))
+        else:
+            selected_indices.extend(indices)
+    
+    random.shuffle(selected_indices)
+    # for tasks with many classes, set a cap for total data for mask training
+    selected_indices = selected_indices[:data_cap]
+
+    # Create a new dataset from the selected indices
+    subset_dataset = Subset(dataset, selected_indices)
+    return subset_dataset
 
 
 def split_train_into_train_val(dataset, new_dataset_class_name, batch_size, num_workers, val_fraction, max_val_samples=None, seed=0):

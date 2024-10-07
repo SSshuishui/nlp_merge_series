@@ -4,7 +4,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import torch
 import time
 import sys
-sys.path.append('/home/zhaoxiang/llm_merge/our_Merging/')
+sys.path.append(os.path.abspath('../../'))
+
 from task_vectors import TaskVector
 from eval import eval_single_dataset
 from args import parse_arguments
@@ -87,6 +88,7 @@ exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIS
 # exam_datasets = ['SUN397', 'Cars'] # SUN397 | Cars | RESISC45 | EuroSAT | SVHN | GTSRB | MNIST | DTD
 model = 'ViT-B-32'
 args = parse_arguments()
+
 args.home = '/data/model_merge/task_vectors/' # type your home path here
 args.data_location = args.home + 'train_data'
 args.model = model

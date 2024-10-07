@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from tqdm import tqdm
-from datasets.common import maybe_dictionarize
+from vision_datasets.common import maybe_dictionarize
 from eval import eval_single_dataset
 from modeling import ImageClassifier
 from heads import get_classification_head

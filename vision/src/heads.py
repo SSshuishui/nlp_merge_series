@@ -4,8 +4,8 @@ from tqdm import tqdm
 
 import open_clip
 
-from datasets.templates import get_templates
-from datasets.registry import get_dataset
+from vision_datasets.templates import get_templates
+from vision_datasets.registry import get_dataset
 
 from modeling import ClassificationHead, ImageEncoder
 

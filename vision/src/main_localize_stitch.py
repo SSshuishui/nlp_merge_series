@@ -6,17 +6,13 @@ import time
 import sys
 from eval import eval_single_dataset
 from args import parse_arguments
-from datasets.registry import get_dataset
 import pickle
-from datasets.registry import split_train_into_train_val, create_k_shot_dataset
+from vision_datasets.registry import get_dataset,split_train_into_train_val, create_k_shot_dataset
 
 import sys
 import os
 sys.path.append(os.path.abspath('../../'))
 from localize_utils import *
-
-root = '/data/model_merge/task_vectors'
-sys.path.append(root)
 
 def create_log_dir(path, filename='log.txt'):
     import logging
@@ -33,25 +29,21 @@ def create_log_dir(path, filename='log.txt'):
     return logger
 
 exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIST', 'DTD'] 
-
+model = 'ViT-B-16'
 args = parse_arguments()
-
-model_name = 'ViT-B-16'
 
 train_mask = True
 args.home = '/data/model_merge/task_vectors/' # type your home path here
 args.data_location = args.home + 'train_data'
-args.model_name = model_name
-args.save = args.home + model_name
-args.log = False
+args.model = model
+args.save = args.home + model
 args.save_mask = False
 n_shot = 64
-pretrained_checkpoint = args.home + model_name + '/zeroshot.pt'
+pretrained_checkpoint = args.home + model + '/zeroshot.pt'
 
 str_time_ = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))
 
 graft_args = parse_arguments()
-graft_args.checkpoint_location = root+'/ckpt'
 graft_args.sigmoid_bias = 5
 args.batch_size = 128
 graft_args.l1_strength = 1
@@ -59,14 +51,13 @@ graft_args.learning_rate = 1e7
 graft_args.num_train_epochs = 10
 graft_args.sparsity = 1e-5
 
-folder_name = model_name+'/'+str(graft_args.sparsity)+'_'+str(graft_args.sigmoid_bias)+'_'+str(graft_args.l1_strength)+'_'+str(graft_args.num_train_epochs)
+folder_name = model+'/'+str(graft_args.sparsity)+'_'+str(graft_args.sigmoid_bias)+'_'+str(graft_args.l1_strength)+'_'+str(graft_args.num_train_epochs)
 
 
-mask_folder = root+f'/masks/{n_shot}shot/'+folder_name+'/'
+mask_folder = f'../masks/{n_shot}shot/'+folder_name+'/'
 args.logs_path = f'../logs/{n_shot}shot/'+folder_name
 
-if args.log:
-    log = create_log_dir(args.logs_path, 'log_{}_localize_stitch.txt'.format(str_time_))
+log = create_log_dir(args.logs_path, 'log_{}_localize_stitch.txt'.format(str_time_))
 
 # start training masks
 final_model = torch.load(pretrained_checkpoint)
@@ -83,7 +74,7 @@ start_time = time.time()
 masks, finetuned_models, proportions, tests = [], [], [], []
 for dataset_name in exam_datasets:
     graft_args.sparsity_level = graft_args.sparsity
-    finetuned_checkpoint = root+'/task_vectors_checkpoints/'+model_name+'/'+dataset_name+'/finetuned.pt'
+    finetuned_checkpoint = args.home + model + '/' + dataset_name + '/finetuned.pt'
     try:
         finetuned_model = torch.load(finetuned_checkpoint)
     except:
