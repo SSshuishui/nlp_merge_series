@@ -608,6 +608,12 @@ class MergingMethod:
 
         return merged_params
 
+
+    def my_merging(self, merged_model: nn.Module, models_to_merge: list, exclude_param_names_regex: list, scaling_coefficient: float = 1.0):
+        models_to_merge_task_vectors = [TaskVector(pretrained_model=merged_model, finetuned_model=model_to_merge, exclude_param_names_regex=exclude_param_names_regex) for model_to_merge in models_to_merge]
+        pass
+
+
     def merging_models(self, merged_model: nn.Module, models_to_merge: list, exclude_param_names_regex: list, scaling_coefficient: float = 1.0,
                        slerp_t: float = 0.5, dot_threshold: float = 0.9995, param_density: float = 0.9, param_value_mask_rate: float = 0.8,
                        weight_format: str = "delta_weight", weight_mask_rates: list = None, use_weight_rescale: bool = True, mask_strategy: str = "random",

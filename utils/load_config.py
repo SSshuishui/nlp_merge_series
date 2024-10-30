@@ -1,1 +1,1 @@
-cache_dir = "/mnt/data/yule/.cache"
+cache_dir = "/data/BaseLLMs/"

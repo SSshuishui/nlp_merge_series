@@ -128,8 +128,7 @@ if __name__ == "__main__":
             mask_apply_method_name = f"{args.mask_apply_method}_param_density_{args.param_density}_param_value_mask_rate_{args.param_value_mask_rate}_scaling_coefficient_{args.scaling_coefficient}"
         elif args.mask_apply_method == "ties_merging":
             mask_apply_method_name = f"{args.mask_apply_method}_param_value_mask_rate_{args.param_value_mask_rate}_scaling_coefficient_{args.scaling_coefficient}"
-        else:
-            assert args.mask_apply_method == "widen_merging"
+        elif args.mask_apply_method == "widen_merging":
             mask_apply_method_name = f"{args.mask_apply_method}_above_avg_{args.above_average_value_ratio}_score_calibration_{args.score_calibration_value}"
         weight_mask_rates = [str(weight_mask_rate) for weight_mask_rate in args.weight_mask_rates]
         args.save_model_name = f"{args.merging_method_name}/{mask_apply_method_name}/mask_{'_'.join(weight_mask_rates)}_rescale_{args.use_weight_rescale}"

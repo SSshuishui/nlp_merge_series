@@ -1,6 +1,6 @@
 import os
 import numpy as np
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 import torch
 import time
 import sys
@@ -89,7 +89,7 @@ args.home = '/data/model_merge/task_vectors/' # type your home path here
 args.data_location = args.home + 'train_data'
 args.model = model
 args.save = args.home + model
-args.logs_path = '../logs/' + model
+args.logs_path = './logs/' + model
 args.batch_size = 16
 pretrained_checkpoint = args.home + model + '/zeroshot.pt'
 

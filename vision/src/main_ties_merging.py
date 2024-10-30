@@ -29,7 +29,7 @@ args.home = '/data/model_merge/task_vectors/'
 args.data_location = args.home + 'train_data'
 args.model = model
 args.save = args.home + model
-args.logs_path = '../logs/' + model
+args.logs_path = './logs/' + model
 pretrained_checkpoint = args.home+model+'/zeroshot.pt'
 
 str_time_ = time.strftime('%Y%m%d_%H%M%S', time.localtime(time.time()))

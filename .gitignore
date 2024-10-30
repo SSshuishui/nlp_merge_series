@@ -28,6 +28,13 @@ MANIFEST
 checkpoints/
 logs/
 math_code_data/
+*.txt
+save_merge_llm_logs/
+save_merge_llms/
+checkpoints/
+vision/logs/
+language/logs/
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
