@@ -35,14 +35,13 @@ class GenericDataset(object):
 def create_k_shot_dataset(dataset, num_shots=64, data_cap=1024):
 
     dataset = dataset.train_dataset
-    targets = dataset.targets if hasattr(dataset, 'targets') else dataset.labels
+    targets = dataset.targets if hasattr(dataset, 'targets') else [label for _,label in dataset._samples]
     
     # Prepare to collect indices for each class
     class_indices = defaultdict(list)
     
     # Optimization: Use a counter to keep track of counts per class
     class_counts = Counter()
-    # class_counts = {}
 
     # Collect indices
     for idx, label in enumerate(targets):

@@ -8,15 +8,15 @@ see `./language/src/README.md`
 
 
 # LLM Experiments:
-8 model merging methods in this repository, including:
-[Average Merging](https://arxiv.org/abs/2203.05482), 
-[Task Arithmetic](https://arxiv.org/abs/2212.04089), 
+Model merging methods in this repository, including:
+[Average Merging](https://arxiv.org/pdf/2203.05482), 
+[Task Arithmetic](https://arxiv.org/pdf/2212.04089), 
 [SLERP](https://dl.acm.org/doi/pdf/10.1145/325165.325242),
-[Model Stock](https://arxiv.org/abs/2403.19522),
-[TIES-Merging](https://arxiv.org/abs/2306.01708),
-[Breadcrumbs](https://arxiv.org/abs/2312.06795), 
-[DARE](https://arxiv.org/abs/2311.03099), and 
-the proposed [WIDEN](https://arxiv.org/abs/2408.03092).
+[Model Stock](https://arxiv.org/pdf/2403.19522),
+[TIES-Merging](https://arxiv.org/pdf/2306.01708),
+[Breadcrumbs](https://arxiv.org/pdf/2312.06795), 
+[DARE](https://arxiv.org/pdf/2311.03099), 
+[WIDEN](https://arxiv.org/pdf/2408.03092).
 
 
 - math_code_data （test data for GSM8K, MATH, and MBPP）

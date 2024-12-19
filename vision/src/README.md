@@ -55,3 +55,8 @@ bash run.sh localize_stitch
 
 bash run.sh dataless_localize_stitch
 ```
+
+#### Run PCB-Merging [paper](https://arxiv.org/pdf/2410.02396)
+```
+bash run.sh pcb
+```

@@ -62,7 +62,6 @@ def hydra_merge(task_vectors):
         for m in range(len(task_vectors)):
             param = task_vectors[m].vector[n]
             # 进行prune
-            param = 
             mask = (param * flag) > 0   # 选择符号一致的参数
             masks[n].append(mask)
             param_abs = torch.abs(mask*param)
@@ -105,7 +104,7 @@ task_vectors = [
 ]
 
 # merge models
-vector_unified, masks, rescalers = our_merge(task_vectors)
+vector_unified, masks, rescalers = hydra_merge(task_vectors)
 
 accs = []
 for i, dataset in enumerate(exam_datasets):

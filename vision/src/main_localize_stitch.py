@@ -28,7 +28,8 @@ def create_log_dir(path, filename='log.txt'):
     logger.addHandler(ch)
     return logger
 
-exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIST', 'DTD'] 
+# exam_datasets = ['SUN397', 'Cars', 'RESISC45', 'EuroSAT', 'SVHN', 'GTSRB', 'MNIST', 'DTD'] 
+exam_datasets = ['GTSRB'] 
 model = 'ViT-B-16'
 args = parse_arguments()
 
@@ -51,13 +52,13 @@ graft_args.learning_rate = 1e7
 graft_args.num_train_epochs = 10
 graft_args.sparsity = 1e-5
 
-folder_name = model+'/'+str(graft_args.sparsity)+'_'+str(graft_args.sigmoid_bias)+'_'+str(graft_args.l1_strength)+'_'+str(graft_args.num_train_epochs)
+folder_name = str(graft_args.sparsity)+'_'+str(graft_args.sigmoid_bias)+'_'+str(graft_args.l1_strength)+'_'+str(graft_args.num_train_epochs)
 
 
-mask_folder = f'../masks/{n_shot}shot/'+folder_name+'/'
-args.logs_path = f'../logs/{n_shot}shot/'+folder_name
+mask_folder = f'./masks/{model}/'+folder_name+'/{n_shot}shot/'
+args.logs_path = f'./logs/'+model
 
-log = create_log_dir(args.logs_path, 'log_{}_localize_stitch.txt'.format(str_time_))
+log = create_log_dir(args.logs_path, f'log_{str_time_}_{folder_name}_{n_shot}shot_localize_stitch.txt')
 
 # start training masks
 final_model = torch.load(pretrained_checkpoint)
@@ -81,6 +82,7 @@ for dataset_name in exam_datasets:
         finetuned_model = pickle.load(open(finetuned_checkpoint, 'rb'))
 
     if train_mask:
+        print("dataset_name: ", dataset_name)
         base_dataset = get_dataset(dataset_name, final_model.val_preprocess, location=args.data_location, batch_size=args.batch_size)
 
         valset = create_k_shot_dataset(base_dataset, num_shots=n_shot)
@@ -110,7 +112,7 @@ for dataset_name in exam_datasets:
     masks.append(mask)
     finetuned_models.append(finetuned_model)
     proportions.append(proportion.cpu().item())
-    tests.append(test)
+    tests.append(test.get('top1')*100)
 
 localize_time = time.time() - start_time
 final_model = torch.load(pretrained_checkpoint)
@@ -122,11 +124,12 @@ accs = []
 for i in range(len(exam_datasets)):
     dataset = exam_datasets[i]
     metrics = eval_single_dataset(image_encoder, dataset, args)
-    accs.append(metrics.get('top1'))
-    if args.log:
-        log.info(str(dataset)+','+str(tests[i])+','+str(proportions[i])+','+str(metrics.get('top1')))
-if args.log:
-    log.info('Avg'+','+str(np.mean(tests))+','+str(np.mean(proportions))+','+str(np.mean(accs)))
-    log.info('sparsity_level'+','+str(graft_args.sparsity_level))
-    log.info('Localize time: '+str(localize_time))
-    log.info('Stitch time: '+str(stitch_time))
+    accs.append(metrics.get('top1')*100)
+    log.info(str(dataset)+','+str(tests[i])+','+str(proportions[i])+','+str(metrics.get('top1')))
+
+log.info(f'Avg tests: {np.mean(tests)}')
+log.info(f'Avg proportions: {np.mean(proportions)}')
+log.info(f'Avg accuracies: {np.mean(accs)}')
+log.info(f'sparsity_level: {str(graft_args.sparsity_level)}')
+log.info(f'Localize time: {str(localize_time)}')
+log.info(f'Stitch time: {str(stitch_time)}')
